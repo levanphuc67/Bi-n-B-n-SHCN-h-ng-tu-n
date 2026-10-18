@@ -2279,6 +2279,18 @@
     // ========================================================
     // ĐỒNG BỘ ĐÁM MÂY TỰ ĐỘNG REALTIME (GOOGLE FIREBASE DATABASE)
     // ========================================================
+    // Cấu hình Google Firebase chính thức của Thầy Lê Văn Phúc (NH 2026 - 2027)
+    const DEFAULT_FIREBASE_CONFIG = {
+      apiKey: "AIzaSyAOWU-STAS__KxSkNVSxUdvFlFYKEbIy4E",
+      authDomain: "quan-ly-lop-6a2-nh-2026-2027.firebaseapp.com",
+      databaseURL: "https://quan-ly-lop-6a2-nh-2026-2027-default-rtdb.firebaseio.com",
+      projectId: "quan-ly-lop-6a2-nh-2026-2027",
+      storageBucket: "quan-ly-lop-6a2-nh-2026-2027.firebasestorage.app",
+      messagingSenderId: "17386391751",
+      appId: "1:17386391751:web:218e68f73bafa8fcfdd6e2",
+      measurementId: "G-0E7TSY6N1H"
+    };
+
     let firebaseApp = null;
     let firebaseDb = null;
     let isSyncingFromCloud = false;
@@ -2328,18 +2340,21 @@
     }
 
     function initCloudSync() {
+      let config = DEFAULT_FIREBASE_CONFIG;
       const savedConfig = localStorage.getItem('lop6a2_firebase_config');
-      if (!savedConfig) {
+      if (savedConfig) {
+        try {
+          const custom = JSON.parse(savedConfig);
+          if (custom && typeof custom === 'object') config = custom;
+        } catch (e) {}
+      }
+
+      if (!config || !config.databaseURL) {
         updateCloudStatusUI('offline', 'Chưa nối Cloud');
         return;
       }
-      try {
-        let config = JSON.parse(savedConfig);
-        if (!config || typeof config !== 'object') {
-          updateCloudStatusUI('offline', 'Chưa nối Cloud');
-          return;
-        }
 
+      try {
         updateCloudStatusUI('connecting', 'Đang nối Cloud...');
 
         if (typeof firebase === 'undefined') {
@@ -2372,6 +2387,7 @@
               localStorage.setItem('lop6a2_meetings', JSON.stringify(meetings));
             }
             if (val.pointRules) {
+              pointRules = val.pointRules;
               localStorage.setItem('lop6a2_point_rules', JSON.stringify(val.pointRules));
             }
             if (val.accounts) {
@@ -2391,11 +2407,13 @@
             const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
             updateCloudStatusUI('connected', `Đã đồng bộ (${timeStr})`);
           } else {
+            // Cloud is empty initially: auto seed from current data
+            pushLocalToCloud(false);
             updateCloudStatusUI('connected', 'Cloud sẵn sàng');
           }
         }, err => {
           console.error('Firebase listen error:', err);
-          updateCloudStatusUI('error', 'Lỗi quyền truy cập');
+          updateCloudStatusUI('error', 'Lỗi quyền (Mở Rules)');
         });
 
       } catch (err) {
@@ -2438,11 +2456,15 @@
       const modal = document.getElementById('cloud-sync-modal');
       const input = document.getElementById('firebase-config-input');
       const savedConfig = localStorage.getItem('lop6a2_firebase_config');
-      if (input && savedConfig) {
-        try {
-          input.value = JSON.stringify(JSON.parse(savedConfig), null, 2);
-        } catch (e) {
-          input.value = savedConfig;
+      if (input) {
+        if (savedConfig) {
+          try {
+            input.value = JSON.stringify(JSON.parse(savedConfig), null, 2);
+          } catch (e) {
+            input.value = savedConfig;
+          }
+        } else {
+          input.value = JSON.stringify(DEFAULT_FIREBASE_CONFIG, null, 2);
         }
       }
       if (modal) modal.classList.remove('hidden');
@@ -2500,9 +2522,9 @@
       }, 1000);
     }
 
-    function pushLocalToCloud() {
+    function pushLocalToCloud(notify = true) {
       if (!firebaseDb) {
-        alert('Chưa kết nối đến Đám Mây Firebase! Vui lòng lưu cấu hình trước.');
+        if (notify) alert('Chưa kết nối đến Đám Mây Firebase! Vui lòng lưu cấu hình trước.');
         return;
       }
       updateCloudStatusUI('connecting', 'Đang tải lên...');
@@ -2514,10 +2536,12 @@
         accounts: loadAccounts(),
         lastUpdated: new Date().toISOString()
       }).then(() => {
-        alert('Đã đẩy toàn bộ dữ liệu lên Đám Mây Firebase thành công! Giờ đây tất cả các thiết bị sẽ tự động đồng bộ theo thời gian thực.');
-        updateCloudStatusUI('connected', 'Đã đồng bộ');
+        if (notify) alert('Đã đẩy toàn bộ dữ liệu lên Đám Mây Firebase thành công! Giờ đây tất cả các thiết bị sẽ tự động đồng bộ theo thời gian thực.');
+        const now = new Date();
+        const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+        updateCloudStatusUI('connected', `Đã đồng bộ (${timeStr})`);
       }).catch(err => {
-        alert('Lỗi đẩy dữ liệu: ' + err.message);
+        if (notify) alert('Lỗi đẩy dữ liệu: ' + err.message + '\n\nLưu ý: Thầy cần vào Firebase Console -> Realtime Database -> Rules và đặt .read: true, .write: true để cấp quyền nhé!');
         updateCloudStatusUI('error', 'Lỗi tải lên');
       });
     }
