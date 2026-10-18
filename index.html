@@ -134,8 +134,9 @@
 
   <!-- Top Navigation Header -->
   <header class="bg-gradient-to-r from-blue-700 via-indigo-700 to-blue-800 text-white shadow-lg sticky top-0 z-40 no-print">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5">
+      <!-- Row 1: School Branding & User Account Status -->
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pb-2.5 border-b border-white/15">
         <div class="flex items-center space-x-3">
           <div class="w-10 h-10 rounded-xl bg-white/10 backdrop-blur border border-white/20 flex items-center justify-center text-xl shadow-inner">
             <i class="fa-solid fa-graduation-cap text-yellow-300"></i>
@@ -148,42 +149,73 @@
             <p class="text-xs text-blue-100 flex items-center gap-2">
               <span><i class="fa-solid fa-user-tie mr-1 text-blue-300"></i>GVCN: Thầy Lê Văn Phúc</span>
               <span>•</span>
-              <span><i class="fa-solid fa-users mr-1 text-blue-300"></i>Sĩ số: <strong class="text-yellow-300">40</strong> học sinh (Theo sơ đồ lớp 6A2)</span>
+              <span><i class="fa-solid fa-users mr-1 text-blue-300"></i>Sĩ số: <strong class="text-yellow-300">40</strong> HS</span>
             </p>
           </div>
         </div>
 
-        <!-- Quick Action Nav Buttons -->
-        <div class="flex items-center flex-wrap gap-2">
-          <button onclick="switchTab('tab-meeting')" id="nav-tab-meeting" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition flex items-center gap-1.5 bg-white text-blue-800 shadow">
-            <i class="fa-solid fa-clipboard-list text-yellow-500"></i>
-            <span>Biên Bản SHCN Gốc</span>
+        <!-- User Profile Pill & Actions -->
+        <div id="header-user-panel" class="flex items-center gap-2 flex-wrap">
+          <div class="flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 px-3 py-1.5 rounded-xl text-xs">
+            <div id="header-user-avatar" class="w-7 h-7 rounded-lg bg-yellow-400 text-blue-900 font-black flex items-center justify-center text-xs shadow-xs">
+              <i class="fa-solid fa-user"></i>
+            </div>
+            <div class="leading-tight">
+              <div class="font-bold text-white flex items-center gap-1.5">
+                <span id="header-user-name">Đang tải...</span>
+                <span id="header-user-badge" class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-amber-400 text-amber-950">GVCN</span>
+              </div>
+              <div id="header-user-role" class="text-[10px] text-blue-200">Giáo viên chủ nhiệm</div>
+            </div>
+          </div>
+
+          <button onclick="openChangePasswordModal()" title="Đổi mật khẩu tài khoản" class="px-2.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-medium transition flex items-center gap-1.5 border border-white/20">
+            <i class="fa-solid fa-key text-yellow-300"></i>
+            <span class="hidden sm:inline">Đổi MK</span>
           </button>
-          <button onclick="switchTab('tab-log')" id="nav-tab-log" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition flex items-center gap-1.5 bg-blue-800/60 hover:bg-white/20 text-white">
-            <i class="fa-solid fa-pen-to-square text-emerald-300"></i>
-            <span>Ghi Nhận Vi Phạm & Tốt</span>
+
+          <button onclick="openAccountManagerModal()" id="btn-header-manage-accounts" title="Quản lý 6 tài khoản & phân quyền (Chỉ GVCN)" class="px-2.5 py-1.5 rounded-xl bg-amber-500/80 hover:bg-amber-600 text-white text-xs font-semibold transition flex items-center gap-1.5 shadow-xs border border-amber-400/40">
+            <i class="fa-solid fa-users-gear text-white"></i>
+            <span class="hidden sm:inline">QL Tài Khoản</span>
           </button>
-          <button onclick="switchTab('tab-stats')" id="nav-tab-stats" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition flex items-center gap-1.5 bg-blue-800/60 hover:bg-white/20 text-white">
-            <i class="fa-solid fa-chart-pie text-cyan-300"></i>
-            <span>Thống Kê (Tổ & HS)</span>
-          </button>
-          <button onclick="switchTab('tab-seating')" id="nav-tab-seating" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition flex items-center gap-1.5 bg-blue-800/60 hover:bg-white/20 text-white">
-            <i class="fa-solid fa-border-all text-amber-300"></i>
-            <span>Sơ Đồ Lớp 6A2</span>
-          </button>
-          <button onclick="switchTab('tab-all')" id="nav-tab-all" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition flex items-center gap-1.5 bg-blue-800/60 hover:bg-white/20 text-white">
-            <i class="fa-solid fa-list-check"></i>
-            <span>Danh Sách Tổng</span>
-          </button>
-          <button onclick="switchTab('tab-groups')" id="nav-tab-groups" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition flex items-center gap-1.5 bg-blue-800/60 hover:bg-white/20 text-white">
-            <i class="fa-solid fa-users-rectangle"></i>
-            <span>Chia 4 Tổ</span>
-          </button>
-          <button onclick="switchTab('tab-backup')" id="nav-tab-backup" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition flex items-center gap-1.5 bg-blue-800/60 hover:bg-white/20 text-white">
-            <i class="fa-solid fa-floppy-disk"></i>
-            <span>Sao Lưu</span>
+
+          <button onclick="logout()" title="Đăng xuất khỏi hệ thống" class="px-2.5 py-1.5 rounded-xl bg-rose-600/90 hover:bg-rose-700 text-white text-xs font-semibold transition flex items-center gap-1.5 shadow-xs">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Thoát</span>
           </button>
         </div>
+      </div>
+
+      <!-- Row 2: Nav Tabs -->
+      <div class="flex items-center flex-wrap gap-2 pt-2">
+        <button onclick="switchTab('tab-meeting')" id="nav-tab-meeting" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-white text-blue-800 shadow">
+          <i class="fa-solid fa-clipboard-list text-yellow-500"></i>
+          <span>Biên Bản SHCN Gốc</span>
+        </button>
+        <button onclick="switchTab('tab-log')" id="nav-tab-log" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-blue-800/60 hover:bg-white/20 text-white">
+          <i class="fa-solid fa-pen-to-square text-emerald-300"></i>
+          <span>Ghi Nhận Vi Phạm & Tốt</span>
+        </button>
+        <button onclick="switchTab('tab-stats')" id="nav-tab-stats" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-blue-800/60 hover:bg-white/20 text-white">
+          <i class="fa-solid fa-chart-pie text-cyan-300"></i>
+          <span>Thống Kê (Tổ & HS)</span>
+        </button>
+        <button onclick="switchTab('tab-seating')" id="nav-tab-seating" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-blue-800/60 hover:bg-white/20 text-white">
+          <i class="fa-solid fa-border-all text-amber-300"></i>
+          <span>Sơ Đồ Lớp 6A2</span>
+        </button>
+        <button onclick="switchTab('tab-all')" id="nav-tab-all" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-blue-800/60 hover:bg-white/20 text-white">
+          <i class="fa-solid fa-list-check"></i>
+          <span>Danh Sách Tổng</span>
+        </button>
+        <button onclick="switchTab('tab-groups')" id="nav-tab-groups" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-blue-800/60 hover:bg-white/20 text-white">
+          <i class="fa-solid fa-users-rectangle"></i>
+          <span>Chia 4 Tổ</span>
+        </button>
+        <button onclick="switchTab('tab-backup')" id="nav-tab-backup" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-blue-800/60 hover:bg-white/20 text-white">
+          <i class="fa-solid fa-floppy-disk"></i>
+          <span>Sao Lưu</span>
+        </button>
       </div>
     </div>
   </header>
@@ -545,16 +577,19 @@
             <!-- All Good Button -->
             <button onclick="fillAllGoodLog()" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-xl transition flex items-center gap-1.5 shadow-sm">
               <i class="fa-solid fa-check-double"></i>
-              <span>Cả lớp chấp hành tốt (1 chạm)</span>
+              <span id="btn-all-good-text">Cả lớp chấp hành tốt (1 chạm)</span>
             </button>
 
             <!-- Go to Document Button -->
-            <button onclick="switchTab('tab-meeting')" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl transition flex items-center gap-1.5 shadow-sm">
+            <button id="btn-goto-meeting" onclick="switchTab('tab-meeting')" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl transition flex items-center gap-1.5 shadow-sm">
               <i class="fa-solid fa-eye"></i>
               <span>Xem trên Biên Bản Gốc</span>
             </button>
           </div>
         </div>
+
+        <!-- Role Notice Banner -->
+        <div id="log-role-notice" class="hidden mx-4 mt-3 p-3 rounded-xl"></div>
 
         <!-- Filter Bar -->
         <div class="p-3.5 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 text-xs">
@@ -1448,6 +1483,199 @@
     </div>
   </div>
 
+  <!-- MODAL ĐĂNG NHẬP (FULLSCREEN OVERLAY) -->
+  <div id="login-modal" class="fixed inset-0 bg-slate-900/90 backdrop-blur-md z-50 flex items-center justify-center p-4 no-print hidden">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-200">
+      <!-- Header with School branding -->
+      <div class="bg-gradient-to-r from-blue-700 via-indigo-700 to-blue-800 text-white p-6 text-center relative">
+        <div class="w-16 h-16 mx-auto mb-3 rounded-2xl bg-white/10 backdrop-blur border border-white/20 flex items-center justify-center text-3xl shadow-lg">
+          <i class="fa-solid fa-graduation-cap text-yellow-300"></i>
+        </div>
+        <span class="text-[11px] font-bold tracking-wider uppercase text-blue-200 bg-white/10 px-3 py-1 rounded-full">
+          TRƯỜNG THCS TÂY PHÚ • NH 2026 - 2027
+        </span>
+        <h2 class="text-xl font-black mt-2 tracking-tight">LỚP 6A2 - QUẢN LÝ NỀ NẾP</h2>
+        <p class="text-xs text-blue-100 mt-1">Hệ thống phân quyền sổ ghi nhận & biên bản SHCN</p>
+      </div>
+
+      <!-- Quick Account Selector Chips -->
+      <div class="p-4 border-b border-slate-100 bg-slate-50/70">
+        <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">
+          <i class="fa-solid fa-bolt text-amber-500 mr-1"></i> Chọn nhanh vai trò đăng nhập:
+        </label>
+        <div class="grid grid-cols-3 gap-1.5 text-xs font-semibold">
+          <button type="button" onclick="selectQuickAccount('gvcn')" class="px-2 py-1.5 rounded-lg border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white transition text-center shadow-2xs">
+            👨‍🏫 GVCN
+          </button>
+          <button type="button" onclick="selectQuickAccount('bancansu')" class="px-2 py-1.5 rounded-lg border border-indigo-200 bg-indigo-50 text-indigo-700 hover:bg-indigo-600 hover:text-white transition text-center shadow-2xs">
+            📋 Lớp trưởng
+          </button>
+          <button type="button" onclick="selectQuickAccount('to1')" class="px-2 py-1.5 rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white transition text-center shadow-2xs">
+            1️⃣ Tổ 1
+          </button>
+          <button type="button" onclick="selectQuickAccount('to2')" class="px-2 py-1.5 rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white transition text-center shadow-2xs">
+            2️⃣ Tổ 2
+          </button>
+          <button type="button" onclick="selectQuickAccount('to3')" class="px-2 py-1.5 rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white transition text-center shadow-2xs">
+            3️⃣ Tổ 3
+          </button>
+          <button type="button" onclick="selectQuickAccount('to4')" class="px-2 py-1.5 rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white transition text-center shadow-2xs">
+            4️⃣ Tổ 4
+          </button>
+        </div>
+      </div>
+
+      <!-- Login Form -->
+      <form onsubmit="handleLoginSubmit(event)" class="p-6 space-y-4">
+        <!-- Error Alert -->
+        <div id="login-error" class="hidden p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium flex items-center gap-2">
+          <i class="fa-solid fa-circle-exclamation text-rose-500 text-sm"></i>
+          <span id="login-error-text">Tên đăng nhập hoặc mật khẩu không chính xác!</span>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Tên đăng nhập:</label>
+          <div class="relative">
+            <i class="fa-solid fa-user absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+            <input type="text" id="login-username" required placeholder="Nhập gvcn / bancansu / to1..." class="w-full pl-9 pr-3 py-2 text-sm border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-medium">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Mật khẩu:</label>
+          <div class="relative">
+            <i class="fa-solid fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+            <input type="password" id="login-password" required placeholder="Nhập mật khẩu..." class="w-full pl-9 pr-10 py-2 text-sm border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-medium">
+            <button type="button" onclick="togglePasswordVisibility('login-password', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between text-xs pt-1">
+          <label class="flex items-center gap-2 cursor-pointer text-slate-600">
+            <input type="checkbox" id="login-remember" checked class="rounded border-slate-300 text-blue-600 focus:ring-blue-500">
+            <span>Ghi nhớ đăng nhập trên máy này</span>
+          </label>
+        </div>
+
+        <button type="submit" class="w-full py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-sm rounded-xl shadow-md transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-right-to-bracket"></i>
+          <span>ĐĂNG NHẬP VÀO HỆ THỐNG</span>
+        </button>
+
+        <div class="bg-blue-50/80 p-3 rounded-xl border border-blue-200 text-xs text-blue-800 space-y-1">
+          <div class="font-bold flex items-center gap-1.5">
+            <i class="fa-solid fa-circle-info text-blue-600"></i>
+            <span>Thông tin tài khoản mặc định:</span>
+          </div>
+          <div class="text-[11px] text-blue-700 pl-4 space-y-0.5">
+            <div>• <strong>Mật khẩu chung ban đầu:</strong> <code class="bg-white px-1.5 py-0.5 rounded border border-blue-300 font-bold text-blue-900">123456</code></div>
+            <div>• GVCN: <code class="text-blue-900 font-bold">gvcn</code> (Toàn quyền quản lý)</div>
+            <div>• Ban cán sự: <code class="text-blue-900 font-bold">bancansu</code> (Ghi nhận 4 tổ)</div>
+            <div>• 4 Tổ trưởng: <code class="text-blue-900 font-bold">to1</code>, <code class="text-blue-900 font-bold">to2</code>, <code class="text-blue-900 font-bold">to3</code>, <code class="text-blue-900 font-bold">to4</code> (Nhập tổ mình)</div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: ĐỔI MẬT KHẨU -->
+  <div id="change-password-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full overflow-hidden border border-slate-200">
+      <div class="bg-gradient-to-r from-blue-700 to-indigo-700 text-white p-4 flex items-center justify-between">
+        <h3 class="font-bold text-sm flex items-center gap-2">
+          <i class="fa-solid fa-key text-yellow-300"></i>
+          Đổi Mật Khẩu Tài Khoản
+        </h3>
+        <button type="button" onclick="closeChangePasswordModal()" class="text-white/80 hover:text-white transition">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form onsubmit="handleChangePasswordSubmit(event)" class="p-5 space-y-3.5 text-xs">
+        <div id="change-pwd-error" class="hidden p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 font-medium text-[11px]"></div>
+        <div id="change-pwd-success" class="hidden p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 font-medium text-[11px]"></div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Tài khoản:</label>
+          <input type="text" id="cp-username" disabled class="w-full px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-lg text-slate-600 font-semibold">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Mật khẩu hiện tại:</label>
+          <input type="password" id="cp-current-password" required placeholder="Nhập mật khẩu đang dùng..." class="w-full px-3 py-1.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Mật khẩu mới:</label>
+          <input type="password" id="cp-new-password" required minlength="4" placeholder="Tối thiểu 4 ký tự..." class="w-full px-3 py-1.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Xác nhận mật khẩu mới:</label>
+          <input type="password" id="cp-confirm-password" required minlength="4" placeholder="Nhập lại mật khẩu mới..." class="w-full px-3 py-1.5 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div class="pt-2 flex items-center justify-end gap-2">
+          <button type="button" onclick="closeChangePasswordModal()" class="px-3 py-1.5 border border-slate-300 text-slate-600 rounded-lg hover:bg-slate-50 transition">Hủy</button>
+          <button type="submit" class="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition shadow-xs flex items-center gap-1.5">
+            <i class="fa-solid fa-check"></i> Lưu mật khẩu mới
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: QUẢN LÝ TÀI KHOẢN (CHỈ DÀNH CHO GVCN) -->
+  <div id="account-manager-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden border border-slate-200 max-h-[90vh] flex flex-col">
+      <div class="bg-gradient-to-r from-indigo-700 to-blue-800 text-white p-4 flex items-center justify-between">
+        <h3 class="font-bold text-sm flex items-center gap-2">
+          <i class="fa-solid fa-users-gear text-yellow-300"></i>
+          Quản Lý Tài Khoản Đăng Nhập & Phân Quyền (GVCN)
+        </h3>
+        <button type="button" onclick="closeAccountManagerModal()" class="text-white/80 hover:text-white transition">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="p-5 overflow-y-auto space-y-4 text-xs">
+        <div class="bg-blue-50 p-3 rounded-xl border border-blue-200 text-blue-800 flex items-start gap-2">
+          <i class="fa-solid fa-circle-info text-blue-600 mt-0.5"></i>
+          <div>
+            Thầy có thể đặt lại mật khẩu cho Tổ trưởng hoặc Ban cán sự nếu các em quên mật khẩu, hoặc đổi tên hiển thị cho từng tài khoản.
+          </div>
+        </div>
+
+        <div class="overflow-x-auto rounded-xl border border-slate-200">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+              <tr>
+                <th class="p-2.5">Tài khoản</th>
+                <th class="p-2.5">Tên hiển thị</th>
+                <th class="p-2.5">Vai trò & Phân quyền</th>
+                <th class="p-2.5 text-center">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="accounts-table-body" class="divide-y divide-slate-200 bg-white">
+              <!-- Dynamically rendered -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between gap-2">
+        <button type="button" onclick="resetAllAccountsDefault()" class="px-3 py-1.5 text-xs text-rose-600 hover:bg-rose-50 border border-rose-200 rounded-lg font-semibold transition">
+          <i class="fa-solid fa-rotate-left mr-1"></i> Khôi phục toàn bộ MK về 123456
+        </button>
+        <button type="button" onclick="closeAccountManagerModal()" class="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition">
+          Đóng
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Footer -->
   <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500 no-print mt-auto">
     <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
@@ -1515,12 +1743,447 @@
     let meetings = {};
     let activeInputId = null;
 
+    // User Authentication & Role Management State
+    let currentUser = null;
+    let accounts = {};
+
+    const DEFAULT_ACCOUNTS = {
+      gvcn: { username: 'gvcn', password: '123456', name: 'Thầy Lê Văn Phúc', role: 'admin', roleName: 'Giáo viên chủ nhiệm' },
+      bancansu: { username: 'bancansu', password: '123456', name: 'Ban Cán Sự 6A2', role: 'bancansu', roleName: 'Lớp trưởng / BCS' },
+      to1: { username: 'to1', password: '123456', name: 'Tổ Trưởng Tổ 1', role: 'to1', roleName: 'Tổ trưởng Tổ 1', targetTo: 1 },
+      to2: { username: 'to2', password: '123456', name: 'Tổ Trưởng Tổ 2', role: 'to2', roleName: 'Tổ trưởng Tổ 2', targetTo: 2 },
+      to3: { username: 'to3', password: '123456', name: 'Tổ Trưởng Tổ 3', role: 'to3', roleName: 'Tổ trưởng Tổ 3', targetTo: 3 },
+      to4: { username: 'to4', password: '123456', name: 'Tổ Trưởng Tổ 4', role: 'to4', roleName: 'Tổ trưởng Tổ 4', targetTo: 4 }
+    };
+
+    function loadAccounts() {
+      const saved = localStorage.getItem('lop6a2_accounts');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed && typeof parsed === 'object') {
+            const merged = { ...DEFAULT_ACCOUNTS };
+            for (const k in parsed) {
+              merged[k] = { ...merged[k], ...parsed[k] };
+            }
+            return merged;
+          }
+        } catch (e) {
+          console.error('Error parsing accounts:', e);
+        }
+      }
+      return JSON.parse(JSON.stringify(DEFAULT_ACCOUNTS));
+    }
+
+    function saveAccounts(accs) {
+      accounts = accs;
+      localStorage.setItem('lop6a2_accounts', JSON.stringify(accs));
+    }
+
+    function loadCurrentUser() {
+      const remembered = localStorage.getItem('lop6a2_current_user');
+      if (remembered) {
+        try {
+          return JSON.parse(remembered);
+        } catch (e) {}
+      }
+      const sessionUser = sessionStorage.getItem('lop6a2_current_user');
+      if (sessionUser) {
+        try {
+          return JSON.parse(sessionUser);
+        } catch (e) {}
+      }
+      return null;
+    }
+
+    function saveCurrentUser(user, remember = false) {
+      currentUser = user;
+      if (!user) {
+        localStorage.removeItem('lop6a2_current_user');
+        sessionStorage.removeItem('lop6a2_current_user');
+        return;
+      }
+      if (remember) {
+        localStorage.setItem('lop6a2_current_user', JSON.stringify(user));
+        sessionStorage.removeItem('lop6a2_current_user');
+      } else {
+        sessionStorage.setItem('lop6a2_current_user', JSON.stringify(user));
+        localStorage.removeItem('lop6a2_current_user');
+      }
+    }
+
+    function checkAuth() {
+      accounts = loadAccounts();
+      currentUser = loadCurrentUser();
+
+      const loginModal = document.getElementById('login-modal');
+      if (!currentUser) {
+        if (loginModal) {
+          loginModal.classList.remove('hidden');
+          document.body.classList.add('overflow-hidden');
+        }
+        return false;
+      }
+
+      const acc = accounts[currentUser.username];
+      if (!acc) {
+        logout();
+        return false;
+      }
+      currentUser = { ...acc };
+
+      if (loginModal) {
+        loginModal.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+      }
+
+      updateHeaderUserInfo();
+      applyRolePermissions();
+      return true;
+    }
+
+    function updateHeaderUserInfo() {
+      if (!currentUser) return;
+      const nameEl = document.getElementById('header-user-name');
+      const roleEl = document.getElementById('header-user-role');
+      const badgeEl = document.getElementById('header-user-badge');
+      const avatarEl = document.getElementById('header-user-avatar');
+      const manageBtn = document.getElementById('btn-header-manage-accounts');
+
+      if (nameEl) nameEl.textContent = currentUser.name || currentUser.username;
+      if (roleEl) roleEl.textContent = currentUser.roleName || 'Người dùng';
+
+      if (badgeEl) {
+        if (currentUser.role === 'admin') {
+          badgeEl.textContent = 'GVCN';
+          badgeEl.className = 'px-1.5 py-0.2 rounded text-[10px] font-bold bg-amber-400 text-amber-950 shadow-2xs';
+          if (avatarEl) avatarEl.className = 'w-7 h-7 rounded-lg bg-yellow-400 text-blue-900 font-black flex items-center justify-center text-xs shadow-xs';
+        } else if (currentUser.role === 'bancansu') {
+          badgeEl.textContent = 'Lớp Trưởng';
+          badgeEl.className = 'px-1.5 py-0.2 rounded text-[10px] font-bold bg-indigo-300 text-indigo-950 shadow-2xs';
+          if (avatarEl) avatarEl.className = 'w-7 h-7 rounded-lg bg-indigo-400 text-white font-black flex items-center justify-center text-xs shadow-xs';
+        } else {
+          badgeEl.textContent = `Tổ ${currentUser.targetTo}`;
+          badgeEl.className = 'px-1.5 py-0.2 rounded text-[10px] font-bold bg-emerald-400 text-emerald-950 shadow-2xs';
+          if (avatarEl) avatarEl.className = 'w-7 h-7 rounded-lg bg-emerald-500 text-white font-black flex items-center justify-center text-xs shadow-xs';
+        }
+      }
+
+      if (manageBtn) {
+        if (currentUser.role === 'admin') {
+          manageBtn.classList.remove('hidden');
+        } else {
+          manageBtn.classList.add('hidden');
+        }
+      }
+    }
+
+    function applyRolePermissions() {
+      if (!currentUser) return;
+
+      const navMeeting = document.getElementById('nav-tab-meeting');
+      const navLog = document.getElementById('nav-tab-log');
+      const navStats = document.getElementById('nav-tab-stats');
+      const navSeating = document.getElementById('nav-tab-seating');
+      const navAll = document.getElementById('nav-tab-all');
+      const navGroups = document.getElementById('nav-tab-groups');
+      const navBackup = document.getElementById('nav-tab-backup');
+      const btnAllGoodText = document.getElementById('btn-all-good-text');
+      const btnGotoMeeting = document.getElementById('btn-goto-meeting');
+      const logFilterTo = document.getElementById('log-filter-to');
+      const roleNotice = document.getElementById('log-role-notice');
+
+      if (currentUser.role === 'admin') {
+        [navMeeting, navLog, navStats, navSeating, navAll, navGroups, navBackup].forEach(el => {
+          if (el) el.classList.remove('hidden');
+        });
+        if (btnAllGoodText) btnAllGoodText.textContent = 'Cả lớp chấp hành tốt (1 chạm)';
+        if (btnGotoMeeting) btnGotoMeeting.classList.remove('hidden');
+        if (logFilterTo) {
+          logFilterTo.disabled = false;
+          logFilterTo.classList.remove('bg-slate-100', 'cursor-not-allowed');
+        }
+        if (roleNotice) roleNotice.classList.add('hidden');
+      } else if (currentUser.role === 'bancansu') {
+        if (navMeeting) navMeeting.classList.add('hidden');
+        if (navAll) navAll.classList.add('hidden');
+        if (navGroups) navGroups.classList.add('hidden');
+        if (navBackup) navBackup.classList.add('hidden');
+        [navLog, navStats, navSeating].forEach(el => {
+          if (el) el.classList.remove('hidden');
+        });
+        if (btnAllGoodText) btnAllGoodText.textContent = 'Cả lớp chấp hành tốt (1 chạm)';
+        if (btnGotoMeeting) btnGotoMeeting.classList.add('hidden');
+        if (logFilterTo) {
+          logFilterTo.disabled = false;
+          logFilterTo.classList.remove('bg-slate-100', 'cursor-not-allowed');
+        }
+        if (roleNotice) {
+          roleNotice.classList.remove('hidden');
+          roleNotice.innerHTML = `<i class="fa-solid fa-user-shield text-indigo-600 mr-1.5"></i> Bạn đang đăng nhập với quyền <strong>${currentUser.name}</strong>. Bạn có quyền ghi nhận nề nếp cho cả 4 tổ trong lớp.`;
+          roleNotice.className = 'p-2.5 bg-indigo-50 border border-indigo-200 rounded-xl text-indigo-800 text-xs font-medium mb-3 flex items-center shadow-2xs';
+        }
+        const currentTabEl = document.querySelector('.tab-content:not(.hidden)');
+        if (currentTabEl && (currentTabEl.id === 'tab-meeting' || currentTabEl.id === 'tab-all' || currentTabEl.id === 'tab-groups' || currentTabEl.id === 'tab-backup')) {
+          switchTab('tab-log');
+        }
+      } else if (currentUser.role.startsWith('to')) {
+        if (navMeeting) navMeeting.classList.add('hidden');
+        if (navAll) navAll.classList.add('hidden');
+        if (navGroups) navGroups.classList.add('hidden');
+        if (navBackup) navBackup.classList.add('hidden');
+        [navLog, navStats, navSeating].forEach(el => {
+          if (el) el.classList.remove('hidden');
+        });
+
+        const toNum = Number(currentUser.targetTo);
+        if (btnAllGoodText) btnAllGoodText.textContent = `Tổ ${toNum} chấp hành tốt (1 chạm)`;
+        if (btnGotoMeeting) btnGotoMeeting.classList.add('hidden');
+        if (logFilterTo) {
+          logFilterTo.value = String(toNum);
+          logFilterTo.disabled = true;
+          logFilterTo.classList.add('bg-slate-100', 'cursor-not-allowed');
+        }
+        if (roleNotice) {
+          roleNotice.classList.remove('hidden');
+          roleNotice.innerHTML = `<i class="fa-solid fa-lock text-emerald-600 mr-1.5"></i> Bạn đang đăng nhập với quyền <strong>${currentUser.name}</strong>. Hệ thống đã khóa chỉ hiển thị và ghi nhận cho 10 học sinh thuộc <strong>Tổ ${toNum}</strong>.`;
+          roleNotice.className = 'p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-xs font-medium mb-3 flex items-center shadow-2xs';
+        }
+        const currentTabEl = document.querySelector('.tab-content:not(.hidden)');
+        if (currentTabEl && (currentTabEl.id === 'tab-meeting' || currentTabEl.id === 'tab-all' || currentTabEl.id === 'tab-groups' || currentTabEl.id === 'tab-backup')) {
+          switchTab('tab-log');
+        }
+      }
+    }
+
+    function selectQuickAccount(username) {
+      const userField = document.getElementById('login-username');
+      const passField = document.getElementById('login-password');
+      if (userField) userField.value = username;
+      if (passField) {
+        passField.value = '123456';
+        passField.focus();
+      }
+    }
+
+    function handleLoginSubmit(e) {
+      e.preventDefault();
+      const username = document.getElementById('login-username').value.trim().toLowerCase();
+      const password = document.getElementById('login-password').value;
+      const remember = document.getElementById('login-remember').checked;
+      const errorEl = document.getElementById('login-error');
+      const errorText = document.getElementById('login-error-text');
+
+      accounts = loadAccounts();
+      const acc = accounts[username];
+
+      if (!acc || acc.password !== password) {
+        if (errorEl) {
+          errorEl.classList.remove('hidden');
+          if (errorText) errorText.textContent = 'Tên đăng nhập hoặc mật khẩu không chính xác!';
+        }
+        return;
+      }
+
+      if (errorEl) errorEl.classList.add('hidden');
+      saveCurrentUser(acc, remember);
+      checkAuth();
+
+      if (acc.role === 'admin') {
+        switchTab('tab-meeting');
+      } else {
+        switchTab('tab-log');
+      }
+    }
+
+    function logout() {
+      if (confirm('Bạn có chắc chắn muốn đăng xuất khỏi hệ thống?')) {
+        saveCurrentUser(null);
+        checkAuth();
+      }
+    }
+
+    function openChangePasswordModal() {
+      if (!currentUser) return;
+      document.getElementById('cp-username').value = currentUser.username;
+      document.getElementById('cp-current-password').value = '';
+      document.getElementById('cp-new-password').value = '';
+      document.getElementById('cp-confirm-password').value = '';
+      document.getElementById('change-pwd-error').classList.add('hidden');
+      document.getElementById('change-pwd-success').classList.add('hidden');
+      document.getElementById('change-password-modal').classList.remove('hidden');
+    }
+
+    function closeChangePasswordModal() {
+      document.getElementById('change-password-modal').classList.add('hidden');
+    }
+
+    function handleChangePasswordSubmit(e) {
+      e.preventDefault();
+      const currPwd = document.getElementById('cp-current-password').value;
+      const newPwd = document.getElementById('cp-new-password').value;
+      const confirmPwd = document.getElementById('cp-confirm-password').value;
+      const errEl = document.getElementById('change-pwd-error');
+      const succEl = document.getElementById('change-pwd-success');
+
+      errEl.classList.add('hidden');
+      succEl.classList.add('hidden');
+
+      accounts = loadAccounts();
+      const acc = accounts[currentUser.username];
+
+      if (!acc || acc.password !== currPwd) {
+        errEl.textContent = 'Mật khẩu hiện tại không đúng!';
+        errEl.classList.remove('hidden');
+        return;
+      }
+
+      if (newPwd.length < 4) {
+        errEl.textContent = 'Mật khẩu mới phải có tối thiểu 4 ký tự!';
+        errEl.classList.remove('hidden');
+        return;
+      }
+
+      if (newPwd !== confirmPwd) {
+        errEl.textContent = 'Mật khẩu xác nhận không khớp!';
+        errEl.classList.remove('hidden');
+        return;
+      }
+
+      acc.password = newPwd;
+      accounts[currentUser.username] = acc;
+      saveAccounts(accounts);
+
+      currentUser = { ...acc };
+      const isRemembered = !!localStorage.getItem('lop6a2_current_user');
+      saveCurrentUser(currentUser, isRemembered);
+
+      succEl.textContent = 'Đổi mật khẩu thành công!';
+      succEl.classList.remove('hidden');
+
+      setTimeout(() => {
+        closeChangePasswordModal();
+      }, 1200);
+    }
+
+    function openAccountManagerModal() {
+      if (!currentUser || currentUser.role !== 'admin') {
+        alert('Chức năng này chỉ dành riêng cho Giáo viên chủ nhiệm!');
+        return;
+      }
+      renderAccountsTable();
+      document.getElementById('account-manager-modal').classList.remove('hidden');
+    }
+
+    function closeAccountManagerModal() {
+      document.getElementById('account-manager-modal').classList.add('hidden');
+    }
+
+    function renderAccountsTable() {
+      accounts = loadAccounts();
+      const tbody = document.getElementById('accounts-table-body');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      const order = ['gvcn', 'bancansu', 'to1', 'to2', 'to3', 'to4'];
+      order.forEach(uname => {
+        const acc = accounts[uname] || DEFAULT_ACCOUNTS[uname];
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50 transition';
+
+        let roleBadge = '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300">Toàn quyền (GVCN)</span>';
+        if (acc.role === 'bancansu') {
+          roleBadge = '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-100 text-indigo-800 border border-indigo-300">Ghi nhận 4 tổ</span>';
+        } else if (acc.role.startsWith('to')) {
+          roleBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">Chỉ ghi nhận Tổ ${acc.targetTo}</span>`;
+        }
+
+        tr.innerHTML = `
+          <td class="p-2.5 font-bold text-slate-800">
+            <code>${acc.username}</code>
+          </td>
+          <td class="p-2.5">
+            <input type="text" id="acc_name_${acc.username}" value="${acc.name || ''}" class="w-full px-2 py-1 text-xs border border-slate-300 rounded font-medium focus:border-blue-500 outline-none">
+          </td>
+          <td class="p-2.5">
+            <div>${roleBadge}</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">${acc.roleName || ''}</div>
+          </td>
+          <td class="p-2.5 text-center whitespace-nowrap">
+            <div class="flex items-center justify-center gap-1.5">
+              <button type="button" onclick="saveAccountName('${acc.username}')" class="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-[11px] font-semibold transition shadow-2xs" title="Lưu tên hiển thị">
+                <i class="fa-solid fa-check"></i> Lưu tên
+              </button>
+              <button type="button" onclick="resetSingleAccountPassword('${acc.username}')" class="px-2 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 rounded text-[11px] font-semibold transition shadow-2xs" title="Đặt lại mật khẩu về 123456">
+                <i class="fa-solid fa-rotate-left"></i> Về 123456
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function saveAccountName(uname) {
+      const input = document.getElementById(`acc_name_${uname}`);
+      if (!input) return;
+      const newName = input.value.trim();
+      if (!newName) {
+        alert('Tên hiển thị không được để trống!');
+        return;
+      }
+      accounts = loadAccounts();
+      if (accounts[uname]) {
+        accounts[uname].name = newName;
+        saveAccounts(accounts);
+        if (currentUser && currentUser.username === uname) {
+          currentUser.name = newName;
+          updateHeaderUserInfo();
+        }
+        alert(`Đã cập nhật tên hiển thị cho tài khoản "${uname}"!`);
+      }
+    }
+
+    function resetSingleAccountPassword(uname) {
+      if (confirm(`Thầy có chắc chắn muốn đặt lại mật khẩu cho tài khoản "${uname}" về mặc định: "123456"?`)) {
+        accounts = loadAccounts();
+        if (accounts[uname]) {
+          accounts[uname].password = '123456';
+          saveAccounts(accounts);
+          alert(`Đã đặt lại mật khẩu của tài khoản "${uname}" về "123456" thành công!`);
+        }
+      }
+    }
+
+    function resetAllAccountsDefault() {
+      if (confirm('Thầy có chắc chắn muốn khôi phục mật khẩu của TẤT CẢ 6 tài khoản về mặc định ban đầu (123456)?')) {
+        accounts = JSON.parse(JSON.stringify(DEFAULT_ACCOUNTS));
+        saveAccounts(accounts);
+        renderAccountsTable();
+        alert('Đã khôi phục toàn bộ tài khoản và mật khẩu về mặc định ban đầu thành công!');
+      }
+    }
+
+    function togglePasswordVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      const icon = btn.querySelector('i');
+      if (input.type === 'password') {
+        input.type = 'text';
+        if (icon) icon.className = 'fa-solid fa-eye-slash';
+      } else {
+        input.type = 'password';
+        if (icon) icon.className = 'fa-solid fa-eye';
+      }
+    }
+
     // Initialize App
     window.onload = function() {
       loadData();
       initWeekSelect();
       renderAll();
       trackActiveInput();
+      checkAuth();
     };
 
     function loadData() {
@@ -1823,6 +2486,14 @@
 
     // Switch Tabs
     function switchTab(tabId) {
+      if (currentUser && currentUser.role !== 'admin') {
+        const restricted = ['tab-meeting', 'tab-all', 'tab-groups', 'tab-backup'];
+        if (restricted.includes(tabId)) {
+          alert('Mục này chỉ dành riêng cho Giáo viên chủ nhiệm! Vui lòng đăng nhập tài khoản GVCN.');
+          return;
+        }
+      }
+
       document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
       document.querySelectorAll('.nav-btn').forEach(btn => {
         btn.classList.remove('bg-white', 'text-blue-800', 'shadow');
@@ -1950,9 +2621,13 @@
         const xl = studentRecord.xuly || '';
         const dg = studentRecord.danhgia || 'Tốt';
 
-        // Filter Logic
+        // Filter Logic (Tổ trưởng chỉ xem và nhập cho tổ của mình)
+        let effectiveFilterTo = filterTo;
+        if (currentUser && currentUser.targetTo) {
+          effectiveFilterTo = String(currentUser.targetTo);
+        }
         const matchName = !q || s.name.toLowerCase().includes(q);
-        const matchTo = (filterTo === 'all') || (Number(s.to) === Number(filterTo));
+        const matchTo = (effectiveFilterTo === 'all') || (Number(s.to) === Number(effectiveFilterTo));
         let matchStatus = true;
         const hasVi = hasViolation(vp);
 
@@ -2189,9 +2864,16 @@
     }
 
     function fillAllGoodLog() {
-      students.forEach(s => setStudentGood(s.id));
-      renderLogTable();
-      alert('Đã cập nhật Tốt cho toàn bộ 40 học sinh lớp 6A2!');
+      if (currentUser && currentUser.targetTo) {
+        const toNum = Number(currentUser.targetTo);
+        students.filter(s => Number(s.to) === toNum).forEach(s => setStudentGood(s.id));
+        renderLogTable();
+        alert(`Đã cập nhật Tốt cho toàn bộ 10 học sinh Tổ ${toNum}!`);
+      } else {
+        students.forEach(s => setStudentGood(s.id));
+        renderLogTable();
+        alert('Đã cập nhật Tốt cho toàn bộ 40 học sinh lớp 6A2!');
+      }
     }
 
     function trackActiveInput() {
@@ -4344,7 +5026,8 @@
         exportedAt: new Date().toISOString(),
         students: students,
         meetings: meetings,
-        pointRules: loadPointRules()
+        pointRules: loadPointRules(),
+        accounts: loadAccounts()
       };
 
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
@@ -4368,9 +5051,11 @@
             students = imported.students;
             if (imported.meetings) meetings = imported.meetings;
             if (imported.pointRules) savePointRules(imported.pointRules);
+            if (imported.accounts) saveAccounts(imported.accounts);
             saveData();
             saveMeetings();
             renderAll();
+            checkAuth();
             alert('Khôi phục dữ liệu thành công!');
           } else {
             alert('File sao lưu không đúng định dạng!');

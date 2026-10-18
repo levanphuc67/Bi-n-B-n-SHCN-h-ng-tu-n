@@ -81,6 +81,21 @@ Dữ liệu được lưu trữ tự động trên trình duyệt (`LocalStorage
 - Xuất toàn bộ dữ liệu ra file `.json` để lưu trữ an toàn.
 - Phục hồi lại dữ liệu dễ dàng trên bất kỳ máy tính nào.
 
+### 10. Hệ Thống Đăng Nhập & Phân Quyền Bảo Mật
+- Tự động hiển thị màn hình khóa đăng nhập khi mở ứng dụng trên bất kỳ thiết bị nào (máy tính, điện thoại, máy tính bảng).
+- **Phân quyền vai trò rõ ràng**:
+  | Tên đăng nhập | Vai trò | Quyền hạn truy cập |
+  | :--- | :--- | :--- |
+  | **`gvcn`** | Giáo viên chủ nhiệm | **Toàn quyền:** Quản lý học sinh, duyệt biên bản gốc, sửa thang điểm, quản lý & đặt lại mật khẩu cho tất cả tài khoản. |
+  | **`bancansu`** | Lớp trưởng / Ban cán sự | Ghi nhận vi phạm & việc tốt cho cả 4 tổ, xem Thống kê & Xếp hạng; không can thiệp danh sách học sinh gốc. |
+  | **`to1`** | Tổ trưởng Tổ 1 | **Chỉ ghi nhận 10 học sinh Tổ 1**, tự động khóa bộ lọc đúng Tổ 1, nút "Tổ 1 chấp hành tốt (1 chạm)". |
+  | **`to2`** | Tổ trưởng Tổ 2 | **Chỉ ghi nhận 10 học sinh Tổ 2**, tự động khóa bộ lọc đúng Tổ 2, nút "Tổ 2 chấp hành tốt (1 chạm)". |
+  | **`to3`** | Tổ trưởng Tổ 3 | **Chỉ ghi nhận 10 học sinh Tổ 3**, tự động khóa bộ lọc đúng Tổ 3, nút "Tổ 3 chấp hành tốt (1 chạm)". |
+  | **`to4`** | Tổ trưởng Tổ 4 | **Chỉ ghi nhận 10 học sinh Tổ 4**, tự động khóa bộ lọc đúng Tổ 4, nút "Tổ 4 chấp hành tốt (1 chạm)". |
+- **Mật khẩu khởi tạo mặc định**: `123456`
+- **Tính năng Đổi mật khẩu**: Mọi tài khoản đều có thể tự đổi mật khẩu của mình.
+- **Tính năng Quản lý tài khoản (Dành riêng cho GVCN)**: Cho phép Thầy đặt lại mật khẩu về `123456` cho bất kỳ em nào quên mật khẩu, hoặc đổi tên hiển thị.
+
 ---
 
 ## 💻 HƯỚNG DẪN CÀI ĐẶT & SỬ DỤNG
