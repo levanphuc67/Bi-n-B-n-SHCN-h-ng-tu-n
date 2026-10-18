@@ -8,6 +8,9 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Firebase Realtime Database SDK (Miễn phí của Google) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -168,6 +171,13 @@
               <div id="header-user-role" class="text-[10px] text-blue-200">Giáo viên chủ nhiệm</div>
             </div>
           </div>
+
+          <!-- Cloud Sync Status Button -->
+          <button onclick="openCloudSyncModal()" id="btn-cloud-sync" title="Cấu hình & Trạng thái đồng bộ đám mây (Google Firebase)" class="px-2.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold transition flex items-center gap-1.5 border border-white/20 shadow-2xs">
+            <span id="cloud-status-dot" class="w-2.5 h-2.5 rounded-full bg-slate-400 inline-block"></span>
+            <i class="fa-solid fa-cloud text-cyan-300"></i>
+            <span id="cloud-status-text" class="hidden md:inline">Chưa nối Cloud</span>
+          </button>
 
           <button onclick="openChangePasswordModal()" title="Đổi mật khẩu tài khoản" class="px-2.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-medium transition flex items-center gap-1.5 border border-white/20">
             <i class="fa-solid fa-key text-yellow-300"></i>
@@ -1676,6 +1686,94 @@
     </div>
   </div>
 
+  <!-- MODAL: CẤU HÌNH ĐỒNG BỘ ĐÁM MÂY (FIREBASE REALTIME DATABASE) -->
+  <div id="cloud-sync-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-xl w-full overflow-hidden border border-slate-200 max-h-[90vh] flex flex-col">
+      <div class="bg-gradient-to-r from-blue-700 via-indigo-700 to-blue-800 text-white p-4 flex items-center justify-between">
+        <h3 class="font-bold text-sm flex items-center gap-2">
+          <i class="fa-solid fa-cloud text-cyan-300"></i>
+          Đồng Bộ Đám Mây Tự Động (Google Firebase)
+        </h3>
+        <button type="button" onclick="closeCloudSyncModal()" class="text-white/80 hover:text-white transition">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="p-5 overflow-y-auto space-y-4 text-xs">
+        <!-- Live Connection Status Card -->
+        <div id="modal-cloud-status-box" class="p-3.5 rounded-xl border flex items-center justify-between bg-slate-50 border-slate-200">
+          <div class="flex items-center gap-3">
+            <span id="modal-cloud-dot" class="w-3.5 h-3.5 rounded-full bg-slate-400 inline-block"></span>
+            <div>
+              <div class="font-bold text-slate-800" id="modal-cloud-title">Trạng thái: Chưa kết nối đám mây</div>
+              <div class="text-[11px] text-slate-500" id="modal-cloud-desc">Dữ liệu hiện đang lưu cục bộ trên máy này.</div>
+            </div>
+          </div>
+          <span id="modal-cloud-badge" class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-200 text-slate-700">Offline</span>
+        </div>
+
+        <!-- Config Input Form -->
+        <div>
+          <label class="block font-bold text-slate-700 mb-1 flex items-center justify-between">
+            <span>Dán đoạn mã cấu hình Firebase (`firebaseConfig`):</span>
+            <span class="text-[11px] font-normal text-blue-600">Miễn phí 100% của Google</span>
+          </label>
+          <textarea id="firebase-config-input" rows="6" placeholder='Dán đoạn mã firebaseConfig vào đây, ví dụ:
+{
+  apiKey: "AIzaSy...",
+  databaseURL: "https://lop6a2-default-rtdb.firebaseio.com",
+  projectId: "lop6a2"
+}' class="w-full p-2.5 font-mono text-xs border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50 focus:bg-white resize-y"></textarea>
+          <p class="text-[11px] text-slate-500 mt-1">
+            <i class="fa-solid fa-circle-question text-blue-500 mr-1"></i>
+            Chỉ cần cấu hình 1 lần, tất cả các lần sau điện thoại và máy tính sẽ tự động đồng bộ realtime mỗi khi nhập!
+          </p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="grid grid-cols-2 gap-2 pt-1">
+          <button type="button" onclick="saveAndConnectCloud()" class="py-2.5 px-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition shadow flex items-center justify-center gap-1.5 text-xs">
+            <i class="fa-solid fa-plug"></i>
+            <span>Lưu & Kết Nối Đám Mây</span>
+          </button>
+          <button type="button" onclick="pushLocalToCloud()" id="btn-push-cloud" class="py-2.5 px-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl transition shadow flex items-center justify-center gap-1.5 text-xs">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <span>Đẩy dữ liệu máy lên Cloud</span>
+          </button>
+        </div>
+
+        <div class="flex items-center justify-between pt-1 border-t border-slate-200">
+          <button type="button" onclick="pullCloudToLocal()" class="text-xs text-indigo-700 hover:text-indigo-900 font-semibold flex items-center gap-1">
+            <i class="fa-solid fa-cloud-arrow-down"></i> Tải dữ liệu từ Cloud về máy
+          </button>
+          <button type="button" onclick="disconnectCloud()" class="text-xs text-rose-600 hover:text-rose-800 font-semibold flex items-center gap-1">
+            <i class="fa-solid fa-trash-can"></i> Xóa cấu hình & Ngắt kết nối
+          </button>
+        </div>
+
+        <!-- Quick 4-Step Guide -->
+        <div class="bg-amber-50/80 p-3.5 rounded-xl border border-amber-200 text-amber-900 text-xs space-y-1.5">
+          <div class="font-bold flex items-center gap-1.5 text-amber-800">
+            <i class="fa-solid fa-lightbulb text-amber-600"></i>
+            <span>Cách lấy mã Firebase miễn phí (Chỉ mất 2 phút):</span>
+          </div>
+          <ol class="list-decimal list-inside space-y-1 text-[11px] text-amber-800/90 pl-1">
+            <li>Truy cập <a href="https://console.firebase.google.com" target="_blank" class="text-blue-600 underline font-semibold">console.firebase.google.com</a> (đăng nhập Gmail).</li>
+            <li>Bấm <strong>"Add project"</strong> (Thêm dự án) $\rightarrow$ đặt tên (vd: <code>lop6a2-tayphu</code>) $\rightarrow$ bấm Tạo.</li>
+            <li>Tại cột trái chọn <strong>Build</strong> $\rightarrow$ <strong>Realtime Database</strong> $\rightarrow$ Bấm <strong>Create Database</strong> $\rightarrow$ Chọn chế độ <strong>Test mode</strong> (Thử nghiệm).</li>
+            <li>Vào Cài đặt dự án (biểu tượng ⚙️) $\rightarrow$ chọn biểu tượng Web <strong><code>&lt;/&gt;</code></strong> $\rightarrow$ copy đoạn <code>firebaseConfig = { ... }</code> dán vào ô bên trên rồi bấm <strong>Lưu & Kết nối</strong>!</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="p-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-end">
+        <button type="button" onclick="closeCloudSyncModal()" class="px-4 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-lg transition text-xs">
+          Đóng
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Footer -->
   <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500 no-print mt-auto">
     <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
@@ -1778,6 +1876,7 @@
     function saveAccounts(accs) {
       accounts = accs;
       localStorage.setItem('lop6a2_accounts', JSON.stringify(accs));
+      syncToCloud();
     }
 
     function loadCurrentUser() {
@@ -2177,6 +2276,299 @@
       }
     }
 
+    // ========================================================
+    // ĐỒNG BỘ ĐÁM MÂY TỰ ĐỘNG REALTIME (GOOGLE FIREBASE DATABASE)
+    // ========================================================
+    let firebaseApp = null;
+    let firebaseDb = null;
+    let isSyncingFromCloud = false;
+    let cloudDebounceTimer = null;
+    let cloudStatus = 'offline';
+
+    function updateCloudStatusUI(status, label) {
+      cloudStatus = status;
+      const dot = document.getElementById('cloud-status-dot');
+      const text = document.getElementById('cloud-status-text');
+      const mDot = document.getElementById('modal-cloud-dot');
+      const mTitle = document.getElementById('modal-cloud-title');
+      const mDesc = document.getElementById('modal-cloud-desc');
+      const mBadge = document.getElementById('modal-cloud-badge');
+
+      let colorClass = 'bg-slate-400';
+      let badgeClass = 'bg-slate-200 text-slate-700';
+      let titleText = 'Trạng thái: Chưa kết nối đám mây';
+      let descText = 'Dữ liệu hiện đang lưu cục bộ trên máy này.';
+
+      if (status === 'connected') {
+        colorClass = 'bg-emerald-400 shadow-sm shadow-emerald-400';
+        badgeClass = 'bg-emerald-100 text-emerald-800 border border-emerald-300';
+        titleText = 'Trạng thái: Đã kết nối Đám Mây Realtime';
+        descText = label || 'Đang tự động đồng bộ tức thời giữa điện thoại & máy tính.';
+      } else if (status === 'connecting') {
+        colorClass = 'bg-amber-400 animate-pulse';
+        badgeClass = 'bg-amber-100 text-amber-800 border border-amber-300';
+        titleText = 'Trạng thái: Đang kết nối / Đang đồng bộ...';
+        descText = label || 'Hệ thống đang truyền dữ liệu lên Google Firebase.';
+      } else if (status === 'error') {
+        colorClass = 'bg-rose-500';
+        badgeClass = 'bg-rose-100 text-rose-800 border border-rose-300';
+        titleText = 'Trạng thái: Lỗi kết nối đám mây';
+        descText = label || 'Kiểm tra lại cấu hình Firebase hoặc đường truyền internet.';
+      }
+
+      if (dot) dot.className = `w-2.5 h-2.5 rounded-full inline-block ${colorClass}`;
+      if (text) text.textContent = label || (status === 'connected' ? 'Đã nối Cloud' : (status === 'connecting' ? 'Đang nối...' : 'Chưa nối Cloud'));
+      if (mDot) mDot.className = `w-3.5 h-3.5 rounded-full inline-block ${colorClass}`;
+      if (mTitle) mTitle.textContent = titleText;
+      if (mDesc) mDesc.textContent = descText;
+      if (mBadge) {
+        mBadge.className = `px-2.5 py-1 rounded-full text-[10px] font-bold ${badgeClass}`;
+        mBadge.textContent = status === 'connected' ? 'Realtime 🟢' : (status === 'connecting' ? 'Syncing 🟡' : (status === 'error' ? 'Lỗi 🔴' : 'Offline'));
+      }
+    }
+
+    function initCloudSync() {
+      const savedConfig = localStorage.getItem('lop6a2_firebase_config');
+      if (!savedConfig) {
+        updateCloudStatusUI('offline', 'Chưa nối Cloud');
+        return;
+      }
+      try {
+        let config = JSON.parse(savedConfig);
+        if (!config || typeof config !== 'object') {
+          updateCloudStatusUI('offline', 'Chưa nối Cloud');
+          return;
+        }
+
+        updateCloudStatusUI('connecting', 'Đang nối Cloud...');
+
+        if (typeof firebase === 'undefined') {
+          console.warn('Firebase SDK not loaded');
+          updateCloudStatusUI('error', 'Chưa tải được SDK');
+          return;
+        }
+
+        if (!firebase.apps || firebase.apps.length === 0) {
+          firebaseApp = firebase.initializeApp(config);
+        } else {
+          firebaseApp = firebase.app();
+        }
+
+        firebaseDb = firebase.database();
+
+        // Listen for changes from Cloud in Realtime
+        const rootRef = firebaseDb.ref('lop6a2');
+        rootRef.on('value', snapshot => {
+          const val = snapshot.val();
+          if (val) {
+            isSyncingFromCloud = true;
+
+            if (val.students && Array.isArray(val.students)) {
+              students = val.students;
+              localStorage.setItem('lop6a2_students_seating_v2', JSON.stringify(students));
+            }
+            if (val.meetings && typeof val.meetings === 'object') {
+              meetings = val.meetings;
+              localStorage.setItem('lop6a2_meetings', JSON.stringify(meetings));
+            }
+            if (val.pointRules) {
+              localStorage.setItem('lop6a2_point_rules', JSON.stringify(val.pointRules));
+            }
+            if (val.accounts) {
+              accounts = val.accounts;
+              localStorage.setItem('lop6a2_accounts', JSON.stringify(accounts));
+              if (currentUser && accounts[currentUser.username]) {
+                currentUser = { ...accounts[currentUser.username] };
+                updateHeaderUserInfo();
+                applyRolePermissions();
+              }
+            }
+
+            renderAll();
+            isSyncingFromCloud = false;
+
+            const now = new Date();
+            const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+            updateCloudStatusUI('connected', `Đã đồng bộ (${timeStr})`);
+          } else {
+            updateCloudStatusUI('connected', 'Cloud sẵn sàng');
+          }
+        }, err => {
+          console.error('Firebase listen error:', err);
+          updateCloudStatusUI('error', 'Lỗi quyền truy cập');
+        });
+
+      } catch (err) {
+        console.error('initCloudSync error:', err);
+        updateCloudStatusUI('error', 'Lỗi cấu hình');
+      }
+    }
+
+    function syncToCloud() {
+      if (!firebaseDb || isSyncingFromCloud) return;
+
+      clearTimeout(cloudDebounceTimer);
+      updateCloudStatusUI('connecting', 'Đang lưu...');
+
+      cloudDebounceTimer = setTimeout(() => {
+        try {
+          const rootRef = firebaseDb.ref('lop6a2');
+          rootRef.update({
+            students: students,
+            meetings: meetings,
+            pointRules: loadPointRules(),
+            accounts: loadAccounts(),
+            lastUpdated: new Date().toISOString()
+          }).then(() => {
+            const now = new Date();
+            const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+            updateCloudStatusUI('connected', `Đã đồng bộ (${timeStr})`);
+          }).catch(err => {
+            console.error('Push to cloud error:', err);
+            updateCloudStatusUI('error', 'Lỗi lưu đám mây');
+          });
+        } catch (e) {
+          console.error(e);
+          updateCloudStatusUI('error', 'Lỗi kết nối');
+        }
+      }, 400);
+    }
+
+    function openCloudSyncModal() {
+      const modal = document.getElementById('cloud-sync-modal');
+      const input = document.getElementById('firebase-config-input');
+      const savedConfig = localStorage.getItem('lop6a2_firebase_config');
+      if (input && savedConfig) {
+        try {
+          input.value = JSON.stringify(JSON.parse(savedConfig), null, 2);
+        } catch (e) {
+          input.value = savedConfig;
+        }
+      }
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeCloudSyncModal() {
+      const modal = document.getElementById('cloud-sync-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function saveAndConnectCloud() {
+      const input = document.getElementById('firebase-config-input');
+      if (!input) return;
+      let raw = input.value.trim();
+
+      if (!raw) {
+        alert('Vui lòng dán đoạn mã cấu hình firebaseConfig trước khi kết nối!');
+        return;
+      }
+
+      if (raw.includes('firebaseConfig =')) {
+        raw = raw.replace(/^.*firebaseConfig\s*=\s*/s, '').replace(/;?\s*$/, '');
+      }
+
+      let parsedConfig = null;
+      try {
+        parsedConfig = JSON.parse(raw);
+      } catch (e1) {
+        try {
+          parsedConfig = (new Function(`return (${raw});`))();
+        } catch (e2) {
+          alert('Đoạn mã cấu hình không đúng định dạng JSON hoặc JavaScript Object!\nChi tiết: ' + e1.message);
+          return;
+        }
+      }
+
+      if (!parsedConfig || typeof parsedConfig !== 'object') {
+        alert('Cấu hình không hợp lệ!');
+        return;
+      }
+
+      if (!parsedConfig.databaseURL && parsedConfig.projectId) {
+        parsedConfig.databaseURL = `https://${parsedConfig.projectId}-default-rtdb.firebaseio.com`;
+      }
+
+      localStorage.setItem('lop6a2_firebase_config', JSON.stringify(parsedConfig));
+      alert('Đã lưu cấu hình Firebase! Hệ thống đang tiến hành kết nối...');
+
+      initCloudSync();
+
+      setTimeout(() => {
+        if (confirm('Bạn có muốn đẩy toàn bộ 40 học sinh và dữ liệu hiện tại trên máy này lên Đám Mây ngay bây giờ không?')) {
+          pushLocalToCloud();
+        }
+      }, 1000);
+    }
+
+    function pushLocalToCloud() {
+      if (!firebaseDb) {
+        alert('Chưa kết nối đến Đám Mây Firebase! Vui lòng lưu cấu hình trước.');
+        return;
+      }
+      updateCloudStatusUI('connecting', 'Đang tải lên...');
+      const rootRef = firebaseDb.ref('lop6a2');
+      rootRef.set({
+        students: students,
+        meetings: meetings,
+        pointRules: loadPointRules(),
+        accounts: loadAccounts(),
+        lastUpdated: new Date().toISOString()
+      }).then(() => {
+        alert('Đã đẩy toàn bộ dữ liệu lên Đám Mây Firebase thành công! Giờ đây tất cả các thiết bị sẽ tự động đồng bộ theo thời gian thực.');
+        updateCloudStatusUI('connected', 'Đã đồng bộ');
+      }).catch(err => {
+        alert('Lỗi đẩy dữ liệu: ' + err.message);
+        updateCloudStatusUI('error', 'Lỗi tải lên');
+      });
+    }
+
+    function pullCloudToLocal() {
+      if (!firebaseDb) {
+        alert('Chưa kết nối đến Đám Mây Firebase!');
+        return;
+      }
+      if (confirm('Tải dữ liệu mới nhất từ Đám Mây về và ghi đè dữ liệu trên máy này?')) {
+        updateCloudStatusUI('connecting', 'Đang tải về...');
+        const rootRef = firebaseDb.ref('lop6a2');
+        rootRef.once('value').then(snapshot => {
+          const val = snapshot.val();
+          if (val) {
+            if (val.students) {
+              students = val.students;
+              saveData();
+            }
+            if (val.meetings) {
+              meetings = val.meetings;
+              saveMeetings();
+            }
+            if (val.pointRules) savePointRules(val.pointRules);
+            if (val.accounts) saveAccounts(val.accounts);
+            renderAll();
+            checkAuth();
+            alert('Đã tải và cập nhật dữ liệu từ Đám Mây thành công!');
+            updateCloudStatusUI('connected', 'Đã đồng bộ');
+          } else {
+            alert('Trên Đám Mây chưa có dữ liệu nào!');
+          }
+        }).catch(err => {
+          alert('Lỗi: ' + err.message);
+        });
+      }
+    }
+
+    function disconnectCloud() {
+      if (confirm('Bạn có chắc chắn muốn ngắt kết nối Đám Mây trên thiết bị này? (Dữ liệu trên máy vẫn được giữ nguyên)')) {
+        localStorage.removeItem('lop6a2_firebase_config');
+        if (firebaseDb) {
+          firebaseDb.ref('lop6a2').off();
+          firebaseDb = null;
+        }
+        updateCloudStatusUI('offline', 'Chưa nối Cloud');
+        alert('Đã ngắt kết nối Đám Mây!');
+        closeCloudSyncModal();
+      }
+    }
+
     // Initialize App
     window.onload = function() {
       loadData();
@@ -2184,6 +2576,7 @@
       renderAll();
       trackActiveInput();
       checkAuth();
+      initCloudSync();
     };
 
     function loadData() {
@@ -2211,10 +2604,12 @@
 
     function saveData() {
       localStorage.setItem('lop6a2_students_seating_v2', JSON.stringify(students));
+      syncToCloud();
     }
 
     function saveMeetings() {
       localStorage.setItem('lop6a2_meetings', JSON.stringify(meetings));
+      syncToCloud();
     }
 
     // ========================================================
@@ -2259,6 +2654,7 @@
 
     function savePointRules(rules) {
       localStorage.setItem('lop6a2_point_rules', JSON.stringify(rules));
+      syncToCloud();
     }
 
     function calculateStudentPoints(violationText, goodDeedText) {

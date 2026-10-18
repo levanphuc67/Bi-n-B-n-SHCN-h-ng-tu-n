@@ -96,6 +96,15 @@ Dữ liệu được lưu trữ tự động trên trình duyệt (`LocalStorage
 - **Tính năng Đổi mật khẩu**: Mọi tài khoản đều có thể tự đổi mật khẩu của mình.
 - **Tính năng Quản lý tài khoản (Dành riêng cho GVCN)**: Cho phép Thầy đặt lại mật khẩu về `123456` cho bất kỳ em nào quên mật khẩu, hoặc đổi tên hiển thị.
 
+### 11. Đồng Bộ Đám Mây Tự Động Realtime (Google Firebase)
+- **Tự động đồng bộ 2 chiều tức thời (Realtime Sync)** giữa điện thoại và máy tính mà không cần gửi file thủ công.
+- Tổ trưởng/Lớp trưởng nhập trên điện thoại $\rightarrow$ Màn hình máy tính của Giáo viên chủ nhiệm tự động nhảy số sau 0.5 giây.
+- Sử dụng nền tảng **Google Firebase Realtime Database** hoàn toàn miễn phí, an toàn và bảo mật.
+- Tích hợp giao diện quản lý Cloud Sync ngay trên thanh điều hướng với đèn báo trạng thái trực quan:
+  - 🟢 **Realtime**: Đang đồng bộ tự động 2 chiều.
+  - 🟡 **Syncing**: Đang truyền tải dữ liệu.
+  - ⚪ **Offline**: Chế độ lưu trữ cục bộ trên máy.
+
 ---
 
 ## 💻 HƯỚNG DẪN CÀI ĐẶT & SỬ DỤNG
