@@ -4343,7 +4343,8 @@
       const backupData = {
         exportedAt: new Date().toISOString(),
         students: students,
-        meetings: meetings
+        meetings: meetings,
+        pointRules: loadPointRules()
       };
 
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
@@ -4366,6 +4367,7 @@
           if (imported.students && Array.isArray(imported.students)) {
             students = imported.students;
             if (imported.meetings) meetings = imported.meetings;
+            if (imported.pointRules) savePointRules(imported.pointRules);
             saveData();
             saveMeetings();
             renderAll();
